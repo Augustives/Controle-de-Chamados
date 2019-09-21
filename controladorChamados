@@ -1,0 +1,54 @@
+from abstractControladorChamados import AbstractControladorChamados
+from tipoChamado import TipoChamado
+from chamado import Chamado
+from datetime import date as Date
+from cliente import Cliente
+from tecnico import Tecnico
+from collections import defaultdict
+
+
+class ControladorChamados(AbstractControladorChamados):
+    def __init__(self):
+        self.__lista_TiposChamado = []
+        self.__lista_chamado = []
+        
+
+    def totalChamadosPorTipo(self, tipo: TipoChamado) -> int:
+        quantidade = 0
+        for chamados in self.__lista_chamado:
+            if chamados.tipo == tipo:
+                quantidade += 1
+        return quantidade
+    
+    
+    def incluiChamado(self, data: Date, cliente: Cliente,
+            tecnico: Tecnico, titulo: str,descricao: str, prioridade: int,
+            tipo: TipoChamado) -> Chamado:
+        chamado_duplicado = False
+        for chamados in self.__lista_chamado:
+            if (chamados.data == data and chamados.cliente == cliente and
+                    chamados.tecnico == tecnico and chamados.tipo == tipo):
+                chamado_duplciado = True
+        if not chamado_duplicado:
+            chamado = Chamado(data, cliente, tecnico, titulo, descricao,
+                prioridade, tipo)
+            self.__lista_chamado.append(chamado)
+            return chamado
+
+    def incluiTipoChamado(self, codigo: int, nome: str,
+            descricao: str) -> TipoChamado:
+        tipoChamado_duplicado = False
+        for chamados in self.__lista_TiposChamado:
+            if chamados.codigo == codigo:
+                tipoChamado_duplicado = True
+        if not tipoChamado_duplicado:
+            tipo_chamado = TipoChamado(codigo, descricao, nome)
+            self.__lista_TiposChamado.append(tipo_chamado)
+            return tipo_chamado
+
+
+
+    @property
+    def tipoChamados(self):
+        return self.__lista_TiposChamado
+
